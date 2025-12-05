@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -35,8 +36,8 @@ public class Hippodrome {
     }
 
     public Horse getWinner() {
-        return horses.stream()
-                .max(Comparator.comparing(Horse::getDistance))
-                .get();
+        Optional<Horse> winner = horses.stream()
+                .max(Comparator.comparing(Horse::getDistance));
+        return winner.orElse(null);
     }
 }
