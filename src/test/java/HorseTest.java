@@ -11,6 +11,13 @@ class HorseTest {
         assertThrows(IllegalArgumentException.class, () -> new Horse(null, 2.4));
     }
 
+    @Test
+    @DisplayName("when null name then correct message")
+    void whenNullName_ThenCorrectMessage() {
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> new Horse(null, 2.4));
+        assertEquals("Name cannot be null.", exception.getMessage());
+    }
 
     @Test
     void getName() {
