@@ -1,13 +1,14 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class HippodromeTest {
 
@@ -65,12 +66,12 @@ class HippodromeTest {
         int horseNumber = 50;
         List<Horse> mockHorses = new ArrayList<>();
         for (int i = 0; i < horseNumber; i++) {
-            mockHorses.add(Mockito.mock(Horse.class));
+            mockHorses.add(mock(Horse.class));
         }
         Hippodrome hippodrome = new Hippodrome(mockHorses);
         hippodrome.move();
         for (Horse horse : mockHorses) {
-            Mockito.verify(horse).move();
+            verify(horse).move();
         }
     }
 

@@ -6,9 +6,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mockStatic;
 
 class HorseTest {
 
@@ -22,7 +22,7 @@ class HorseTest {
     @BeforeEach
     void setUp() {
         horse = new Horse(VALID_NAME, VALID_SPEED, VALID_DISTANCE);
-        mockedHorse = Mockito.mockStatic(Horse.class);
+        mockedHorse = mockStatic(Horse.class);
     }
 
     @Test
