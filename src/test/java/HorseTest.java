@@ -1,124 +1,145 @@
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class HorseTest {
 
+    private static final String VALID_NAME = "Thunder";
+    private static final double VALID_SPEED = 2.4;
+    private static final double VALID_DISTANCE = 1.0;
+
+    private Horse horse;
+    private MockedStatic<Horse> mockedHorse;
+
+    @BeforeEach
+    void setUp() {
+        horse = new Horse(VALID_NAME, VALID_SPEED, VALID_DISTANCE);
+        mockedHorse = Mockito.mockStatic(Horse.class);
+    }
+
     @Test
     @DisplayName("when null name throw illegal argument exception")
     void whenNullName_ThrowIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> new Horse(null, 2.4, 1.0));
+        assertThrows(IllegalArgumentException.class, () -> new Horse(null, VALID_SPEED, VALID_DISTANCE));
     }
 
     @Test
     @DisplayName("when null name then correct message")
     void whenNullName_ThenCorrectMessage() {
-        String expectedMessage = "Name cannot be null.";
         IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> new Horse(null, 2.4, 1.0));
-        String actualMessage = exception.getMessage();
-        assertEquals(expectedMessage, actualMessage);
+                assertThrows(IllegalArgumentException.class, () -> new Horse(null, VALID_SPEED, VALID_DISTANCE));
+        assertEquals("Name cannot be null.", exception.getMessage());
     }
 
     @ParameterizedTest
-    @DisplayName("when empty name then throw illegal argument exception")
+    @DisplayName("when blank name then throw illegal argument exception")
     @ValueSource(strings = {"", "   ", "\t", "\n", "\r", " \t "})
-    void whenEmptyName_ThenThrowIllegalArgumentException(String emptyName) {
-        assertThrows(IllegalArgumentException.class, () -> new Horse(emptyName, 2.4, 1.0));
+    void whenBlankName_ThenThrowIllegalArgumentException(String blankName) {
+        assertThrows(IllegalArgumentException.class, () -> new Horse(blankName, VALID_SPEED, VALID_DISTANCE));
     }
 
     @ParameterizedTest
     @DisplayName("when blank name then correct message")
     @ValueSource(strings = {"", "   ", "\t", "\n", "\r", " \t "})
     void whenBlankName_ThenCorrectMessage(String blankName) {
-        String expectedMessage = "Name cannot be blank.";
         IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> new Horse(blankName, 2.4, 1.0));
-        String actualMessage = exception.getMessage();
-        assertEquals(expectedMessage, actualMessage);
+                assertThrows(IllegalArgumentException.class, () -> new Horse(blankName, VALID_SPEED, VALID_DISTANCE));
+        assertEquals("Name cannot be blank.", exception.getMessage());
     }
 
     @Test
     @DisplayName("when negative speed then throw illegal argument exception")
     void whenNegativeSpeed_ThenThrowIllegalArgumentException() {
-        double incorrectSpeed = -1.0;
-        assertThrows(IllegalArgumentException.class, () -> new Horse("name", incorrectSpeed, 1.0));
+        double invalidSpeed = -1.0;
+        assertThrows(IllegalArgumentException.class, () -> new Horse(VALID_NAME, invalidSpeed, VALID_DISTANCE));
     }
 
     @Test
     @DisplayName("when negative speed then correct message")
     void whenNegativeSpeed_ThenCorrectMessage() {
-        double incorrectSpeed = -1.0;
-        String expectedMessage = "Speed cannot be negative.";
+        double invalidSpeed = -1.0;
         IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> new Horse("name", incorrectSpeed, 1.0));
-        String actualMessage = exception.getMessage();
-        assertEquals(expectedMessage, actualMessage);
+                assertThrows(IllegalArgumentException.class, () -> new Horse(VALID_NAME, invalidSpeed, VALID_DISTANCE));
+        assertEquals("Speed cannot be negative.", exception.getMessage());
     }
 
     @Test
     @DisplayName("when negative distance then throw illegal argument exception")
     void whenNegativeDistance_ThenThrowIllegalArgumentException() {
-        double incorrectDistance = -1.0;
-        assertThrows(IllegalArgumentException.class, () -> new Horse("name", 2.4, incorrectDistance));
+        double invalidDistance = -1.0;
+        assertThrows(IllegalArgumentException.class, () -> new Horse(VALID_NAME, VALID_SPEED, invalidDistance));
     }
 
     @Test
     @DisplayName("when negative distance then correct message")
     void whenNegativeDistance_ThenCorrectMessage() {
-        double incorrectDistance = -1.0;
-        String expectedMessage = "Distance cannot be negative.";
+        double invalidDistance = -1.0;
         IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> new Horse("name", 2.4, incorrectDistance));
-        String actualMessage = exception.getMessage();
-        assertEquals(expectedMessage, actualMessage);
+                assertThrows(IllegalArgumentException.class, () -> new Horse(VALID_NAME, VALID_SPEED, invalidDistance));
+        assertEquals("Distance cannot be negative.", exception.getMessage());
     }
 
     @ParameterizedTest
     @DisplayName("when getName() then correct name from constructor")
     @ValueSource(strings = {"Thunder", "*Thunder-2*"})
     void whenGetName_ThenCorrectNameFromConstructor(String expectedName) {
-        Horse horse = new Horse(expectedName, 2.4, 1.0);
-        String actualName = horse.getName();
-        assertEquals(expectedName, actualName, "getName() should return correct name from constructor");
+        Horse horse = new Horse(expectedName, VALID_SPEED, VALID_DISTANCE);
+        assertEquals(expectedName, horse.getName(), "getName() should return correct name from constructor");
     }
 
     @Test
     @DisplayName("when getSpeed() then return correct number from constructor")
     void whenGetSpeed_ThenReturnCorrectNumberFromConstructor() {
-        double expectedSpeed = 2.4;
-        Horse horse = new Horse("Thunder", expectedSpeed, 1.0);
-        double actualSpeed = horse.getSpeed();
-        assertEquals(expectedSpeed, actualSpeed, "getSpeed() should return correct number from constructor");
+        assertEquals(VALID_SPEED, horse.getSpeed(), "getSpeed() should return correct number from constructor");
     }
 
     @Test
     @DisplayName("when getDistance() then return correct distance from constructor")
     void whenGetDistance_ThenReturnCorrectDistanceFromConstructor() {
-        double expectedDistance = 1.0;
-        Horse horse = new Horse("Thunder", 2.4, expectedDistance);
-        double actualDistance = horse.getDistance();
-        assertEquals(expectedDistance, actualDistance, "getDistance() should return correct distance from constructor");
+        assertEquals(VALID_DISTANCE, horse.getDistance(), "getDistance() should return correct distance from constructor");
     }
 
     @Test
     @DisplayName("given constructor with two parameters when getDistance() then return zero")
     void givenConstructorWithTwoParameters_WhenGetDistance_ThenReturnZero() {
         double expectedDistance = 0.0;
-        Horse horse = new Horse("Thunder", 2.4);
-        double actualDistance = horse.getDistance();
-        assertEquals(expectedDistance, actualDistance, "getDistance() should return zero if two-parameter constructor is used");
-    }
-
-
-    @Test
-    void move() {
+        Horse horse = new Horse(VALID_NAME, VALID_SPEED);
+        assertEquals(expectedDistance, horse.getDistance(), "getDistance() should return zero if two-parameter constructor is used");
     }
 
     @Test
-    void getRandomDouble() {
+    @DisplayName("when move() then getRandomDouble() is called")
+    void whenMove_ThenGetRandomDoubleIsCalled() {
+        horse.move();
+        mockedHorse.verify(() -> Horse.getRandomDouble(0.2, 0.9));
+    }
+
+    @ParameterizedTest
+    @DisplayName("when move() then calculate correct distance")
+    @CsvSource({
+            "2.4, 0.2, 0.0, 0.48",
+            "2.5, 0.5, 1.0, 2.25",
+            "3.0, 0.8, 3.0, 5.4"
+    })
+    void whenMove_ThenCalculateCorrectDistance(double speed, double random, double distance, double expectedDistance) {
+        Horse horse = new Horse(VALID_NAME, speed, distance);
+        mockedHorse.when(() -> Horse.getRandomDouble(0.2, 0.9)).thenReturn(random);
+        horse.move();
+        assertEquals(expectedDistance, horse.getDistance(), 0.001,
+                "new distance should be calculated by formula: distance + speed * getRandomDouble(0.2, 0.9)");
+        mockedHorse.verify(() -> Horse.getRandomDouble(0.2, 0.9));
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockedHorse.close();
     }
 }
